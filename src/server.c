@@ -1,9 +1,11 @@
-#include <stdio.h>
+#include "server.h"
 
 
-
-int main() {
-
-
-    return 0;
+void connect() {
+    printf("in server connect\n");
+    /* connect server and bluetooth communication
+    
+    
+    
+    */
 }
