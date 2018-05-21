@@ -1,0 +1,15 @@
+# Compile source #
+##################
+
+*.o
+*.out
+
+# Packages #
+############
+
+*.7z
+*.tar
+*.zip
+*.jar
+*.rar
+
