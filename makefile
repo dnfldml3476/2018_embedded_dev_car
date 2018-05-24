@@ -1,13 +1,13 @@
 DIR = src
 TARGET = prog.out
+CC = gcc
 
 OBJECTS = main.o init.o server.o car.o
-CC = gcc
 CFLAGS = -Wall -W 
 
 #if you have python
 #OBJECTS = main.o init.o server.o face.o car.o
-#CFLAGS = -Wall -W -I/usr/include/python2.7 -lpython2.7
+#CFLAGS = -Wall -W -I/usr/include/python3.5m -lpython3.5m
 
 $(TARGET) : $(OBJECTS) 
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)

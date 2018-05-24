@@ -1,15 +1,22 @@
 #ifndef __FACE_H_
 #define __FACE_H_
 
-#include <Python.h>
 #include <stdio.h>
+#include <Python.h>
 
 /* declare python objects */
 PyObject *PyModule;
-PyObject *PyImport;
+PyObject *PyArg1, *PyArg2;
+PyObject *PyLoad_image, *PyFace_encodings, *PyCompare_faces;
+PyObject *PyUser, *PyPicture;
+PyObject *PyEnc1, *PyEnc2;
+PyObject *first_enc1, *first_enc2;
+PyObject *ret;
 
-void load_image(char *filename);
-void face_encodings(char *filename);
-int face_compare(char *filename);
+
+void face_init();
+void load_image(char *filename, int check);
+void face_encodings(PyObject *image, int check);
+int face_compare(double tolerance); 
 
 #endif
