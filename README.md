@@ -7,10 +7,13 @@
 2. dlib 19.0 이상
 3. face_recognition
 4. Raspberry Pi 3
-
+5. json-c
 ### Python 설치
  * [Python 설치법](http://tofusoup429.tistory.com/2)
 
 ### dlib & face_recognition on Raspberry Pi 설치
  * [dlib and face_recognition 설치법](https://gist.github.com/ageitgey/1ac8dbe8572f3f533df6269dab35df65)
   위 링크의 모든 과정을 필요로함.
+  
+### Json-c 설치 
+ * [json-c](https://github.com/json-c/json-c)
