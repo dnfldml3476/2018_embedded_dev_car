@@ -3,7 +3,7 @@ TARGET = prog.out
 CC = gcc
 
 OBJECTS = main.o init.o server.o car.o base64.o
-CFLAGS = -Wall -W -Wsign-compare
+CFLAGS = -Wall -W -Wsign-compare -lpigpio -lrt -pthread
 
 #if you have python
 #OBJECTS = main.o init.o server.o face.o car.o base64.o
