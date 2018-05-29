@@ -16,5 +16,10 @@
   위 링크의 모든 과정을 필요로함.
  * dlib를 설치하는데 있어서 19.7이상의 버전을 필요로함. (본 프로젝트에서는 19.9를 사용)
   
-### cJSON 설치 
+### cJSON 설치
+ 'cJSON' GitHub repo: https://github.com/DaveGamble/cJSON
+ 
+ ```sh
+ $ git clone https://github.com/DaveGamble/cJSON
+ ```
  
