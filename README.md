@@ -23,3 +23,12 @@
  $ git clone https://github.com/DaveGamble/cJSON
  ```
  
+### bluetooth 설치
+ bluetooth lib 설치 및 환경설정 참조: http://webnautes.tistory.com/1137?category=699571
+```sh
+$ sudo apt-get install bluetooth libbluetooth-dev
+$ sudo apt-get install bluez
+```
+ 실행시 발생하는 세그멘테에션 폴트(Segmetation Fault)을 위한 SDP Server 활성화 설정 필요.
+ * bluetooth server 연결전 페어링과정이 필요함.
+ * bluetooth연결이 되는지 확인을 위한 소스가 /test/bluetooth_server.c 에 있음.
