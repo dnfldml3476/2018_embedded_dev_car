@@ -1,17 +1,28 @@
 #include <stdio.h>
-#include "init.h"
-#include "server.h"
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <pigpio.h>
 #include "car.h"
+#include "camera.h"
+//#include "face.h"
+#include "server.h"
 
+
+
+void init() {
+  /*  if(gpioInitialise() < 0){
+         fprintf(stderr, "pigpio initialisation failed.\n");
+         exit(-1);
+    }*/
+    car_init();
+    camera_init();
+   // face_init();
+}
 
 
 int main(int argc, char *argv[]) {
-
-     if(gpioInitialise() < 0){
-         printf("pigpio initialisation failed.\n");
-         exit(-1);
-     }
-
+    init();
+    
     //init();
     //connect();
     //move_left();
@@ -39,6 +50,6 @@ int main(int argc, char *argv[]) {
     move_right(350000);
     stop();
 
-    gpioTerminate();
+    //gpioTerminate();
     return 0;
 }

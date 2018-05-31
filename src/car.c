@@ -1,6 +1,6 @@
 #include "car.h"
 
-void set_mode()
+void car_init()
 {
     gpioSetMode(GPIN23,PI_OUTPUT); gpioSetMode(GPIN24,PI_OUTPUT);
     gpioSetMode(GPIN25,PI_OUTPUT); 

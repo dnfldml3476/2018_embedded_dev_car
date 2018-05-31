@@ -1,17 +1,16 @@
-#include "init.h"
+#include "camera.h"
 
 //int count;
 uint32_t shot_tick;
 
 
-void init() {
-
+void camera_init() {
 	/*
 	   init camera module and pin
 	   init car module and pin
 	   register callback function
 	*/
-	printf("init()\n");
+	printf("camera init()\n");
 	if(gpioInitialise() < 0){
 		fputs("pigpio initialisation failed.\n",stderr);
 		exit(1);
@@ -19,14 +18,10 @@ void init() {
 	
 	gpioSetMode(SWITCH_PINNO,PI_INPUT);
 	gpioSetPullUpDown(SWITCH_PINNO,PI_PUD_UP);
-	gpioSetISRFunc(SWITCH_PINNO,RISING_EDGE,0,cb_rising_func);
-	
-	getchar(); //test code
-	//gpioTerminate();
-	return;
+	gpioSetISRFunc(SWITCH_PINNO,RISING_EDGE,0,camera_rising_func);
 }
 
-void cb_rising_func(int gpio,int level,uint32_t tick)
+void camera_rising_func(int gpio,int level,uint32_t tick)
 {
 	int status,pid;
 

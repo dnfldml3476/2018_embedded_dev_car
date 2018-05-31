@@ -11,7 +11,7 @@ void face_init() {
 }
 
 void load_image(char *filename, int check) { 
-    PyObject *PyFilent ame = PyBytes_FromString(filename);
+    PyObject *PyFilename = PyBytes_FromString(filename);
 
     PyArg1 = PyTuple_New(1);
     PyTuple_SetItem(PyArg1, 0, PyFilename); // conver list to Tuple

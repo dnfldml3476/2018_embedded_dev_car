@@ -1,4 +1,12 @@
-#include "server.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/sdp.h>
+#include <bluetooth/sdp_lib.h>
+#include <bluetooth/rfcomm.h>
+
 
 bdaddr_t bdaddr_any = {0, 0, 0, 0, 0, 0};
 bdaddr_t bdaddr_local = {0, 0, 0, 0xff, 0xff, 0xff};
@@ -188,6 +196,7 @@ int init_server() {
     return client;
 }
 
+char input[1024] = { 0 };
 char *read_server(int client) {
     // read data from the client
     int bytes_read;
@@ -211,9 +220,8 @@ void write_server(int client, char *message) {
         printf("sent [%s] %d\n", messageArr, bytes_sent);
     }
 }
-
-
-/*
+#include <cjson/cJSON.h>
+//#include "cJSON.h"
 int main()
 {
     int client = init_server();
@@ -258,4 +266,3 @@ int main()
        // write_server(client, recv_message);
     }
 }
-*/
