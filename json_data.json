@@ -1,0 +1,10 @@
+{
+    "message_id": "USER_INFO",
+    "data" : {
+        "name": "sang",
+        "image": "adsfasdfaf"
+    },
+    "result": "success"
+}
+ 
+

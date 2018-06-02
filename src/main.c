@@ -4,42 +4,48 @@
 #include <pigpio.h>
 #include "car.h"
 #include "camera.h"
-//#include "face.h"
 #include "server.h"
+//#include "data.h"
 
+//#include "face.h"
 
+int client;
 
 void init() {
-  /*  if(gpioInitialise() < 0){
+   if(gpioInitialise() < 0){
          fprintf(stderr, "pigpio initialisation failed.\n");
          exit(-1);
-    }*/
+    }
     car_init();
     camera_init();
    // face_init();
+
+
+   /*
+    add init_server
+    get user_img
+    */
 }
 
 
 int main(int argc, char *argv[]) {
     init();
-    
-    //init();
-    //connect();
-    //move_left();
+
+    test_read();
+
+    // check that user_img is exist
+    while(1) {
 
     /*
-     printf("%d\n", gpioSetPWMrange(GPIN25,default_range));
-     printf("%d\n", gpioSetPWMrange(GPIN19,default_range));
-     printf("%d\n", gpioPWM(GPIN19,130));
-     printf("%d\n", gpioPWM(GPIN25,130));
-             
-     printf("%d\n", gpioGetPWMdutycycle(GPIN25));
-     printf("%d\n", gpioGetPWMdutycycle(GPIN19));
-           
-     printf("%d\n", gpioGetPWMrange(GPIN25));
-     printf("%d\n", gpioGetPWMrange(GPIN19));
-     */
+        1. get alarm signal by bluetooth
+        2. call move_car
+        3. take picture
+        4. write server (alarm exit signal)
+        */
 
+
+    }
+/*
     forward(300000);
     move_right(350000);
     forward(300000);
@@ -49,7 +55,7 @@ int main(int argc, char *argv[]) {
     forward(300000);
     move_right(350000);
     stop();
-
-    //gpioTerminate();
+*/
+    gpioTerminate();
     return 0;
 }

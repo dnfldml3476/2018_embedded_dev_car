@@ -2,7 +2,7 @@ DIR = src
 TARGET = prog.out
 CC = gcc
 
-OBJECTS = main.o server.o car.o base64.o camera.o
+OBJECTS = main.o server.o car.o base64.o camera.o data.o
 CFLAGS = -Wall -W -Wsign-compare -lpigpio -lrt -pthread -lbluetooth -lcjson
 
 #if you have python
@@ -25,6 +25,9 @@ base64.o : $(DIR)/base64.c
 	$(CC) $(CFLAGS) -c $^
 
 camera.o : $(DIR)/camera.c
+	$(CC) $(CFLAGS) -c $^
+
+data.o : $(DIR)/data.c
 	$(CC) $(CFLAGS) -c $^
 
 #face.o : $(DIR)/face.c
