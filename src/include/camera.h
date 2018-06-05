@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <pigpio.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #define SWITCH_PINNO 26
 #define USER_FILENAME "user_img.jpg"

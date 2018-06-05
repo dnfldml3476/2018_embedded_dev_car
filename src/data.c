@@ -1,5 +1,4 @@
-#include "data.h"
-#include <fcntl.h>
+#include <data.h>
 
 char message_id[3][20] ={"USER_INFO", "SIGNAL_START", "USER_AUTH"};
 
@@ -11,31 +10,24 @@ void test_read() {
     nread = read(fd, json, sizeof(json));
     json[nread-1] = 0;
 
-    printf("\n%s\n", json);
+    //memset(recv_message, 0, sizeof(recv_message));
+    recv_message = json;
 
-    int ret =  identify_msg(json);
+    printf("\n%s\n", recv_message);
+
+    int ret =  identify_msg();
     printf("%d\n", ret);
 
 }
-int parse_msg(int id) {
-    switch(id) {
-        case 0:
-            parse_userinfo();
-            break;
-        case 1:
-            break;
-        case 2:
-            break;
-        default:
-            fprintf(stderr, "msg parsing error\n");
-            return -1;
-    }
-    return 0;
+void save_img() {
+    /*
+    save image user_image.jpg
+    */
+
 }
 
-
-int identify_msg(char *recv) {
-    cJSON *json = cJSON_Parse(recv);
+int identify_msg() {
+    cJSON *json = cJSON_Parse(recv_message);
     if (json  == NULL) {
         fprintf(stderr, "in identify_data parsing error\n");
         exit(-1);
@@ -52,12 +44,99 @@ int identify_msg(char *recv) {
     return -1; // failed
 }
 
-int parse_userinfo() {
+int parse_msg(int id) {
+    switch(id) {
+        case 0:
+            printf("call parse_userinfo() \n");
+            parse_userinfo();
+            save_img(); // make user_image.jpg
+            break;
+        case 1:
+            printf("call parse_signal() \n");
+            parse_signal();
+            break;
+        default:
+            fprintf(stderr, "msg parsing error\n");
+            return -1;
+    }
+    return 0;
+}
 
+int parse_userinfo() {
+    cJSON *json = cJSON_Parse(recv_message);
+    
+    user_info.message_id = cJSON_GetObjectItemCaseSensitive(json, "message_id") -> valuestring;
+    cJSON *data = cJSON_GetObjectItemCaseSensitive(json, "data");
+    
+    user_info.name= cJSON_GetObjectItemCaseSensitive(data, "name") -> valuestring;
+    user_info.image = cJSON_GetObjectItemCaseSensitive(data, "image") -> valuestring;
+    if (user_info.name != NULL) {
+        printf("user's name is %s\n", user_info.name);
+    }
+    else {
+        fprintf(stderr, "user info is NULL error!\n");
+        return -1; // fail!
+    }
+
+    // need base64 decoding user_info.image
+    // and save image file to user_image
+    
+    user_info.result = cJSON_GetObjectItemCaseSensitive(data, "result") -> valuestring;
+    return 0;
+}
+
+int parse_signal() {
+    cJSON *json = cJSON_Parse(recv_message);
+    
+    signal_start.message_id = cJSON_GetObjectItemCaseSensitive(json, "message_id") -> valuestring;
+    cJSON *data = cJSON_GetObjectItemCaseSensitive(json, "data");
+    
+    signal_start.car_speed = cJSON_GetObjectItemCaseSensitive(data, "car_speed") ->valueint;
+    
+    printf("setting car_speed : %d\n", signal_start.car_speed);
 
     return 0;
 }
 
+int make_userauth(int val) {
+    if (UserAuth == NULL)
+        UserAuth = cJSON_CreateObject();
+    else {
+        cJSON_Delete(UserAuth);
+        UserAuth = cJSON_CreateObject();
+    }
+    cJSON *message_id = cJSON_CreateObject();
+    cJSON *data = cJSON_CreateObject();
+    cJSON *result = cJSON_CreateObject();
+
+    message_id = cJSON_CreateString("USER_AUTH");
+
+    cJSON *tmp = cJSON_CreateObject();
+    if (val == 1)
+        tmp = cJSON_CreateString("success");
+    else if (val == 0)
+        tmp = cJSON_CreateString("fail");
+    cJSON_AddItemToObject(data, "result", tmp);
+
+    result = cJSON_CreateString("success");
+
+    cJSON_AddItemToObject(UserAuth, "message_id", message_id);
+    cJSON_AddItemToObject(UserAuth, "data", data);
+    cJSON_AddItemToObject(UserAuth, "result", result);
+    if (UserAuth != NULL) {
+        char *string = cJSON_Print(UserAuth);
+        if (string == NULL) {
+            fprintf(stderr, "cJSON_Parse(UserAuth) error\n");
+            return -1;
+        }
+        printf("making UserAuth is success\n %s\n", string);
+    }
+    else {
+        fprintf(stderr, "UserAuth is NULL\n");
+        return -1;
+    }
+    return 0;
+}
 
 
 

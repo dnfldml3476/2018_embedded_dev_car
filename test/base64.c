@@ -1,4 +1,4 @@
-#include <base64.h>
+#include "base64.h"
 
 int base64_decode(char *text, unsigned char *dst, int numBytes )
 {
@@ -67,26 +67,51 @@ int base64_encode(char *text, int numBytes, char **encodedText)
     (*encodedText)[j] = '\0';
     return size;
 }
-/*
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
-    char* plain_text = "Å×½ºÆ®Test`1234567890-=\[];',./";
+    //    char* plain_text = "Å×½ºÆ®Test`1234567890-=\[];',./";
     char* b64encoded_text = NULL;
-    printf("plain text\n");
-    printf("%s\n\n", plain_text);
-    
+    //    printf("plain text\n");
+    //    printf("%s\n\n", plain_text);
+    int fd;
+    if ((fd = open("obama.jpg", O_RDONLY)) == 0) {
+        fprintf(stderr, "fopen error obama.jpg\n");
+        exit(1);
+    }
+    char tmp[1024] = { 0, };
+    char *b64encoded_test = NULL;
+
+    int nread = read(fd, tmp, sizeof(tmp)); 
+    printf("%s\n\n", tmp);
+
+    int len_b64_encoded = base64_encode(tmp, strlen(tmp)+1, &b64encoded_text);
     printf("b64 encoded text\n");
     printf("%s\n\n", b64encoded_text);
-    
+    // base 64 ¿¿¿
+    // ¿¿¿ ¿¿¿ ¿¿¿ ¿¿¿ ¿¿¿¿
+    // ¿¿ ¿¿¿ ¿¿¿¿ ¿¿¿ ¿¿¿¿.
     unsigned char *dst = (unsigned char*)malloc(1000);
     int len_b64 = base64_decode(b64encoded_text,dst,1000);
     printf("b64 decoded tex\n");
     printf("%s\n\n", dst);
-    if(dst != NULL) free(dst);
-    if(b64encoded_text != NULL) free(b64encoded_text);
-    getchar();
-    return 0;
+
+    int fd2;
+    if ((fd2 = open("test.jpg", O_RDWR | O_CREAT, 0644)) == 0) {
+        fprintf(stderr, " make file error\n");
+        exit(1);
+    }
+    
+    
+    if(dst != NULL) 
+        free(dst);
+    write(fd2, dst, strlen(dst));
+
+    if(b64encoded_text != NULL)
+        free(b64encoded_text);
+
+
+
 }
 
 
-http://www.iamcorean.net/125 [I'm MK!]*/
+//http://www.iamcorean.net/125 [I'm MK!]*/

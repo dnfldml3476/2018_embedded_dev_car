@@ -3,7 +3,7 @@ TARGET = prog.out
 CC = gcc
 
 OBJECTS = main.o server.o car.o base64.o camera.o data.o
-CFLAGS = -Wall -W -Wsign-compare -lpigpio -lrt -pthread -lbluetooth -lcjson
+CFLAGS = -Wall -W -Wsign-compare -I $(DIR)/include -lpigpio -lrt -pthread -lbluetooth -lcjson
 
 #if you have python
 #OBJECTS = main.o init.o server.o face.o car.o base64.o

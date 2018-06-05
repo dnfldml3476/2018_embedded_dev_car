@@ -1,4 +1,4 @@
-#include "face.h"
+#include <face.h>
 
 void face_init() {
     Py_Initialize();

@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <pigpio.h>
-#include "car.h"
-#include "camera.h"
-#include "server.h"
-//#include "data.h"
+#include <car.h>
+#include <camera.h>
+#include <server.h>
+#include <data.h>
 
-//#include "face.h"
+//#include <face.h>
 
 int client;
 
@@ -32,18 +32,39 @@ int main(int argc, char *argv[]) {
     init();
 
     test_read();
+    int client = init_server();
 
-    // check that user_img is exist
-    while(1) {
+    while(1) { // 5. repeat  waiting  alarm signal
+    // 1. get alarm signal or register signal by bluetooth
+        memset(input, 0, sizeof(input));
+        recv_message = read_server(client);
 
-    /*
-        1. get alarm signal by bluetooth
-        2. call move_car
-        3. take picture
-        4. write server (alarm exit signal)
-        */
+    // 2. check message 
+        int id = identify_msg();
+        int ret = 0; // auth is OK
+        
+        parse_msg(id);
+    // 3. call move car and take picture
+        if (id == 1) { // if id == 1 then, start move_car
+            /*
+            call move_car
 
+            and wait picture success
+            */
+            ret = 1;
+        }
 
+    // 4. if catch the car then signal success 
+        if (ret == 1) { // send alamr exit signal
+            memset(recv_message, 0, sizeof(recv_message));
+            if (make_userauth(1) == -1) {
+                fprintf(stderr, "make userauth error\n");
+                exit(1);
+            }
+            //memcpy(recv_message, UserAuth, sizeof(UserAuth));
+            write_server(client, cJSON_Print(UserAuth));
+        }
+    
     }
 /*
     forward(300000);
