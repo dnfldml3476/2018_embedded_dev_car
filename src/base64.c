@@ -39,6 +39,7 @@ int base64_decode(char *text, unsigned char *dst, int numBytes )
     }
     return space_idx;
 }
+
 int base64_encode(char *text, int numBytes, char **encodedText)
 {
     unsigned char input[3]  = {0,0,0};
@@ -67,6 +68,7 @@ int base64_encode(char *text, int numBytes, char **encodedText)
     (*encodedText)[j] = '\0';
     return size;
 }
+
 /*
 int _tmain(int argc, _TCHAR* argv[])
 {

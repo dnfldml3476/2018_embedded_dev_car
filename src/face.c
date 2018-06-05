@@ -7,7 +7,6 @@ void face_init() {
     PyLoad_image = PyObject_GetAttrString(PyModule, "load_image_file"); // register functions
     PyFace_encodings = PyObject_GetAttrString(PyModule, "face_encodings");
     PyCompare_faces = PyObject_GetAttrString(PyModule, "compare_faces");
-
 }
 
 void load_image(char *filename, int check) { 

@@ -37,7 +37,7 @@ void camera_rising_func(int gpio,int level,uint32_t tick)
 	}
 	if(pid==0){
 		status = execlp("raspistill","raspistill",
-				"-t","1","-o",USER_FILENAME,0);
+				"-t","1","-o",PIC_FILENAME,0);
 		exit(status);
 	}
 	printf("Take a picture......\n");

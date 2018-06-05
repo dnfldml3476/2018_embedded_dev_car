@@ -9,6 +9,7 @@
 
 #define SWITCH_PINNO 26
 #define USER_FILENAME "user_img.jpg"
+#define PIC_FILENAME "picture_img.jpg"
 
 
 void camera_init();

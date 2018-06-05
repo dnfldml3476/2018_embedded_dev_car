@@ -48,6 +48,10 @@ void stop()
     gpioWrite(GPIN6, 0); gpioWrite(GPIN13, 0);
 }
 
-
+void move_car() {
+    /*
+        moving random car
+    */
+}
 
 
