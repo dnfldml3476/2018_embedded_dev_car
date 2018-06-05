@@ -19,6 +19,7 @@ void move_right(int time);
 void move_left(int time);
 void stop();
 
+void move_car();
 #endif
 
 
