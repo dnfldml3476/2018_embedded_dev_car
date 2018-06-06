@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <sys/wait.h>
 #include <pigpio.h>
 #include <car.h>
@@ -17,6 +18,7 @@ void init() {
          exit(-1);
     }
     car_init();
+    sensor_init();
     camera_init();
    // face_init();
 
@@ -29,14 +31,9 @@ void init() {
 
 
 int main(int argc, char *argv[]) {
-    /*
-        need pairing
-    */
-
     init();
 
     test_read();
-    
     int client = init_server();
 
     while(1) { // 5. repeat  waiting  alarm signal
@@ -47,14 +44,8 @@ int main(int argc, char *argv[]) {
     // 2. check message 
         int id = identify_msg();
         int ret = 0; // auth is OK
-
+        
         parse_msg(id);
-        if (id == 0) {
-            /* save_image */
-            /*
-            load_image(USER_FILENAME, 0);
-            face_encoding(PyUser, 0);*/
-        }
     // 3. call move car and take picture
         if (id == 1) { // if id == 1 then, start move_car
             /*
@@ -62,10 +53,7 @@ int main(int argc, char *argv[]) {
 
             and wait picture success
             */
-            /*
-            load_image(PIC_FILENAME, 1);
-            face_encoding(PyPicture, 1);
-            ret = face_compare(0.5);*/
+            ret = 1;
         }
 
     // 4. if catch the car then signal success 
@@ -79,6 +67,17 @@ int main(int argc, char *argv[]) {
             write_server(client, cJSON_Print(UserAuth));
         }
     
+    }
+    while(1) {
+        if (danger)
+        {
+            stop();
+            backward();
+            time(NULL) %2 ? move_right() : move_left();
+            while(danger);
+            stop();
+        }
+        forward();
     }
 /*
     forward(300000);
