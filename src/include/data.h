@@ -2,10 +2,10 @@
 #define __DATA_H_
 
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 #include <base64.h>
 #include <camera.h>
 #include <cjson/cJSON.h>

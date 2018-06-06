@@ -35,10 +35,12 @@ int save_img(char *filename, char *text, int size) {
 }
 
 int identify_msg() {
+    printf("in identfy_msg\n");
+    printf("%s\n\n", recv_message);
     cJSON *json = cJSON_Parse(recv_message);
     if (json  == NULL) {
         fprintf(stderr, "in identify_data parsing error\n");
-        exit(-1);
+        return -1;
     }
     for (int i = 0; i < MSG_CNT; i++) {
         char *msg_id = cJSON_GetObjectItemCaseSensitive(json, "message_id") -> valuestring;

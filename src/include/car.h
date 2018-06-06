@@ -25,12 +25,13 @@ void forward();
 void backward();
 void move_right();
 void move_left();
-void stop();
+void stop_car();
 
 void forward_inf();
 void move_car();
 
-int danger; // flag about car_status
+int FLAG_CAR; // 1-> car turn left or right  0-> straight
+int FLAG_SENSOR; // 1 -> sensor on 0 -> sensor off
 
 #endif
 

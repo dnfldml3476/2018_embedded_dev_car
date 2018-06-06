@@ -4,6 +4,9 @@ uint32_t start_tick,dist_tick;
 
 void car_init()
 {
+    FLAG_CAR = 0;
+    FLAG_SENSOR = 1;
+
     gpioSetMode(GPIN23,PI_OUTPUT); gpioSetMode(GPIN24,PI_OUTPUT);
     gpioSetMode(GPIN25,PI_OUTPUT); 
     gpioSetMode(GPIN6,PI_OUTPUT);  gpioSetMode(GPIN13,PI_OUTPUT);
@@ -16,7 +19,6 @@ void sensor_init()
 {
     pthread_t thr;
     int thr_id;
-    danger = 0;
     
     gpioCfgClock(2, 1, 1);
     gpioSetMode(GPIN2,PI_OUTPUT);
@@ -32,6 +34,7 @@ void* sensor_thread(void* data)
 {
     while(1)
     {
+        while(FLAG_SENSOR) {
         start_tick = dist_tick = 0;
         gpioTrigger(GPIN2,10,PI_HIGH);
         gpioDelay(50000);
@@ -40,16 +43,21 @@ void* sensor_thread(void* data)
             float distance = dist_tick / 1000000. * 340 / 2 * 100;
             if(distance<50)
             {
-                danger = 1;
+                FLAG_CAR = 1;
             }
             else
             {
+#ifdef PRINT_SENSOR
                 printf("interrval : %6dus, Distance : %6.1f cm\n",dist_tick,distance);
-                danger = 0;
+#endif
+                FLAG_CAR = 0;
             }
         }
+#ifdef PRINT_SENSOR
         else printf("sensor error\n");
+#endif
         gpioDelay(100000);
+        }
     }
 
 }
@@ -80,16 +88,23 @@ void move_left()
     gpioWrite(GPIN23, 0); gpioWrite(GPIN24, 1);
     gpioWrite(GPIN6, 1); gpioWrite(GPIN13, 0);
 }
-void stop()
+void stop_car()
 {
     gpioWrite(GPIN23, 0); gpioWrite(GPIN24, 0);
     gpioWrite(GPIN6, 0); gpioWrite(GPIN13, 0);
 }
 
 void move_car() {
-    /*
-        moving random car
-    */
+    while(1) {
+       if (FLAG_CAR) {
+           stop_car();
+           backward();
+           time(NULL)%2 ? move_right : move_left();
+           while(FLAG_CAR);
+           stop_car();
+        }
+        forward();
+    }
 }
 
 

@@ -14,3 +14,12 @@
 *.rar
 
 *.swp
+
+
+# image files #
+###############
+
+*.jpg
+*.bmp
+*.jpeg
+*.png

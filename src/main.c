@@ -7,8 +7,20 @@
 #include <camera.h>
 #include <server.h>
 #include <data.h>
+#include <signal.h>
 
 //#include <face.h>
+#define FACE_VAL 0.5 // face tolerance
+
+/*   test define *  */
+//****************
+
+//#define CAR_TEST
+#define SERVER_TEST
+//#define CONNECT_CAR
+//#define CONNECT_CAMERA
+
+/*  *   *  *  *  *  */
 
 int client;
 extern int danger;
@@ -22,39 +34,47 @@ void init() {
     sensor_init();
     camera_init();
    // face_init();
-
-
-   /*
-    add init_server
-    get user_img
-    */
+    client = init_server();
 }
 
 
-int main(int argc, char *argv[]) {
-    init();
+int main() {
+/***    init(); ***/
 
-    test_read();
-    int client = init_server();
+    client = init_server();
 
+#ifndef CAR_TEST
     while(1) { // 5. repeat  waiting  alarm signal
     // 1. get alarm signal or register signal by bluetooth
         memset(input, 0, sizeof(input));
         recv_message = read_server(client);
+        printf("** recv_message **\n");
+        printf("%s\n\n", recv_message);
 
     // 2. check message 
         int id = identify_msg();
         int ret = 0; // auth is OK
-        
-        parse_msg(id);
-    // 3. call move car and take picture
-        if (id == 1) { // if id == 1 then, start move_car
-            /*
-            call move_car
 
-            and wait picture success
-            */
-            ret = 1;
+#ifdef SERVER_TEST
+        ret = 1;
+#endif
+        parse_msg(id);  // if id == 1 then, start move_car
+
+    // 3. call move car and take picture
+        if (id == 1) {     // if ret = 1 then success and break loop
+            while(!ret) 
+            { 
+#ifdef CONNECT_CAR
+                move_car();
+#endif
+#ifdef CONNECT_CAMERA
+                while(!PICTURE_ON); // wait taking picture
+                
+                ret = face_compare(FACE_VAL);
+#endif
+                PICTURE_ON = 0; // picture not same
+                FLAG_SENSOR = 1; // sensor on!
+            }
         }
 
     // 4. if catch the car then signal success 
@@ -67,30 +87,13 @@ int main(int argc, char *argv[]) {
             //memcpy(recv_message, UserAuth, sizeof(UserAuth));
             write_server(client, cJSON_Print(UserAuth));
         }
-    
+        ret = 0;
     }
-    while(1) {
-        if (danger)
-        {
-            stop();
-            backward();
-            time(NULL) %2 ? move_right() : move_left();
-            while(danger);
-            stop();
-        }
-        forward();
-    }
-/*
-    forward(300000);
-    move_right(350000);
-    forward(300000);
-    move_right(350000);
-    forward(300000);
-    move_right(350000);
-    forward(300000);
-    move_right(350000);
-    stop();
-*/
+#endif
+#ifdef CAR_TEST
+    move_car();
+#endif
     gpioTerminate();
+
     return 0;
 }
