@@ -1,7 +1,6 @@
 #include <car.h>
 
 uint32_t start_tick,dist_tick;
-int danger;
 
 void car_init()
 {

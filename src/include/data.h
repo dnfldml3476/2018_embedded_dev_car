@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <base64.h>
+#include <camera.h>
 #include <cjson/cJSON.h>
 
 #define MSG_CNT 3
@@ -16,6 +18,7 @@ typedef struct Userinfo
     char *message_id;
     char *name;
     char *image;
+    int length;
     char *result;
 }Userinfo;
 
@@ -36,7 +39,7 @@ int parse_msg(int id);
 int parse_userinfo();
 int parse_signal();
 int identify_msg();
-void save_image();
+int save_img(char *filename, char *text, int size);
 int make_userauth(int val); // val is success = 1 fail = 0
 
 

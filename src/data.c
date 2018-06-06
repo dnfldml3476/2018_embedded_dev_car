@@ -20,12 +20,18 @@ void test_read() {
 
 }
 
-void save_img() {
+int save_img(char *filename, char *text, int size) {
+    FILE *fp = fopen(filename, "w");
     
-    /*
-        save image user_image.jpg
-    */
-
+    int count = fwrite(text, size, 1, fp);
+    fclose(fp);
+    
+    if (count == 0) {
+        fprintf(stderr, "fwrite error %s\n", filename);
+        return -1;
+    }
+    
+    return 0;    
 }
 
 int identify_msg() {
@@ -40,8 +46,6 @@ int identify_msg() {
         if (strcmp(message_id[i],msg_id) == 0) {
             return i;
         }
-    
-
     }
     return -1; // failed
 }
@@ -49,9 +53,9 @@ int identify_msg() {
 int parse_msg(int id) {
     switch(id) {
         case 0:
-            printf("call parse_userinfo() \n");
+            printf("call parse_userinfo() and save user_image\n");
             parse_userinfo();
-            save_img(); // make user_image.jpg
+            //save_img(); // make user_image.jpg
             break;
         case 1:
             printf("call parse_signal() \n");
@@ -72,16 +76,25 @@ int parse_userinfo() {
     
     user_info.name= cJSON_GetObjectItemCaseSensitive(data, "name") -> valuestring;
     user_info.image = cJSON_GetObjectItemCaseSensitive(data, "image") -> valuestring;
+    user_info.length = cJSON_GetObjectItemCaseSensitive(data, "length") -> valueint;
+    
     if (user_info.name != NULL) {
+        char *decode_text = (char *)malloc(user_info.length);
         printf("user's name is %s\n", user_info.name);
+        
+        // encoding base64 and save_image
+        base64_decode(user_info.image, decode_text, user_info.length); 
+        if(save_img(USER_FILENAME, decode_text, user_info.length) == -1) {
+            fprintf(stderr, "save_image error\n");
+            return -1;
+        }
+        free(decode_text);
     }
     else {
         fprintf(stderr, "user info is NULL error!\n");
         return -1; // fail!
     }
 
-    // need base64 decoding user_info.image
-    // and save image file to user_image
     
     user_info.result = cJSON_GetObjectItemCaseSensitive(data, "result") -> valuestring;
     return 0;

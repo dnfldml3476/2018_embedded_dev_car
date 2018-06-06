@@ -11,6 +11,7 @@
 //#include <face.h>
 
 int client;
+extern int danger;
 
 void init() {
    if(gpioInitialise() < 0){
@@ -58,7 +59,7 @@ int main(int argc, char *argv[]) {
 
     // 4. if catch the car then signal success 
         if (ret == 1) { // send alamr exit signal
-            memset(recv_message, 0, sizeof(recv_message));
+            //memset(input, 0, sizeof(input));
             if (make_userauth(1) == -1) {
                 fprintf(stderr, "make userauth error\n");
                 exit(1);

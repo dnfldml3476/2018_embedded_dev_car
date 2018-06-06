@@ -16,6 +16,7 @@
 #define GPIN2 2 //trigger
 #define GPIN3 3 //echo
 
+
 void car_init();
 void sensor_init();
 void sensor_rising_func(int gpio,int level,uint32_t tick);
@@ -26,12 +27,11 @@ void move_right();
 void move_left();
 void stop();
 
-<<<<<<< HEAD
 void forward_inf();
-
-=======
 void move_car();
->>>>>>> 8980b16956a73312035a8be6e415b646af69535c
+
+int danger; // flag about car_status
+
 #endif
 
 
