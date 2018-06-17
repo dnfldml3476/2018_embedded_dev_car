@@ -95,7 +95,7 @@ void stop_car()
 }
 
 void move_car() {
-    while(1) {
+    while(FLAG_SENSOR) {
        if (FLAG_CAR) {
            stop_car();
            backward();

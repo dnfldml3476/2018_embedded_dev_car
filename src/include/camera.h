@@ -9,8 +9,8 @@
 #include <unistd.h>
 
 #define SWITCH_PINNO 26
-#define USER_FILENAME "user_img.jpg"
-#define PIC_FILENAME "picture_img.jpg"
+#define USER_FILENAME "userimg.png"
+#define PIC_FILENAME "pictureimg.png"
 
 int PICTURE_ON;
 

@@ -12,7 +12,7 @@
 #include <cjson/cJSON.h>
 
 
-char input[1024];
+char input[200000];
 
 int _str2uuid( const char *uuid_str, uuid_t *uuid );
 int init_server();

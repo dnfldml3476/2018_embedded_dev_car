@@ -2,11 +2,12 @@ DIR = src
 TARGET = prog.out
 CC = gcc
 
-OBJECTS = main.o server.o car.o base64.o camera.o data.o
-CFLAGS = -Wall -W -Wsign-compare -I$(DIR)/include -lpigpio -lrt -pthread -lbluetooth -lcjson
+#OBJECTS = main.o server.o car.o base64.o camera.o data.o
+#CFLAGS = -Wall -W -Wsign-compare -I$(DIR)/include -lpigpio -lrt -pthread -lbluetooth -lcjson
 
 #if you install python and face_recognition
-#OBJECTS = main.o init.o server.o face.o car.o base64.o
+OBJECTS = main.o server.o face.o car.o base64.o camera.o data.o
+CFLAGS = -Wall -W -Wsign-compare -I$(DIR)/include -I/usr/include/python3.5m -lpython3.5m -lpigpio -lrt -pthread -lbluetooth -lcjson
 #CFLAGS = -Wall -W -I/usr/include/python3.5m -lpython3.5m
 
 $(TARGET) : $(OBJECTS) 
@@ -30,8 +31,8 @@ camera.o : $(DIR)/camera.c
 data.o : $(DIR)/data.c
 	$(CC) $(CFLAGS) -c $^
 
-#face.o : $(DIR)/face.c
-#	$(CC) $(CFLAGS) -c $^
+face.o : $(DIR)/face.c
+	$(CC) $(CFLAGS) -c $^
 
 clean :
 	rm $(OBJECTS)

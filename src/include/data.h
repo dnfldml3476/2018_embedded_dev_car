@@ -8,6 +8,7 @@
 #include <string.h>
 #include <base64.h>
 #include <camera.h>
+#include <face.h>
 #include <cjson/cJSON.h>
 
 #define MSG_CNT 3
@@ -38,7 +39,7 @@ void test_read();
 int parse_msg(int id);
 int parse_userinfo();
 int parse_signal();
-int identify_msg();
+int identify_msg(char *msg);
 int save_img(char *filename, char *text, int size);
 int make_userauth(int val); // val is success = 1 fail = 0
 

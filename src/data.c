@@ -2,27 +2,10 @@
 
 char message_id[3][20] ={"USER_INFO", "SIGNAL_START", "USER_AUTH"};
 
-void test_read() {
-    char json[1024] ={ 0, };
-
-    int nread;
-    int fd = open("json_data.json", O_RDONLY);
-    nread = read(fd, json, sizeof(json));
-    json[nread-1] = 0;
-
-    //memset(recv_message, 0, sizeof(recv_message));
-    recv_message = json;
-
-    printf("\n%s\n", recv_message);
-
-    int ret =  identify_msg();
-    printf("%d\n", ret);
-
-}
 
 int save_img(char *filename, char *text, int size) {
-    FILE *fp = fopen(filename, "w");
-    
+    printf("in save_img...\n");
+    FILE *fp = fopen(filename, "w+");
     int count = fwrite(text, size, 1, fp);
     fclose(fp);
     
@@ -34,14 +17,16 @@ int save_img(char *filename, char *text, int size) {
     return 0;    
 }
 
-int identify_msg() {
+int identify_msg(char *msg) {
     printf("in identfy_msg\n");
-    printf("%s\n\n", recv_message);
-    cJSON *json = cJSON_Parse(recv_message);
+//    printf("%s\n\n", msg);
+    cJSON *json = cJSON_Parse(msg);
     if (json  == NULL) {
         fprintf(stderr, "in identify_data parsing error\n");
         return -1;
     }
+    printf("????\n");
+    printf("%s\n\n", msg);
     for (int i = 0; i < MSG_CNT; i++) {
         char *msg_id = cJSON_GetObjectItemCaseSensitive(json, "message_id") -> valuestring;
         printf("msg_id : %s\n", msg_id);
@@ -57,6 +42,8 @@ int parse_msg(int id) {
         case 0:
             printf("call parse_userinfo() and save user_image\n");
             parse_userinfo();
+            load_image(USER_FILENAME, 0);
+            face_encoding(PyUser, 0);
             //save_img(); // make user_image.jpg
             break;
         case 1:
@@ -72,20 +59,21 @@ int parse_msg(int id) {
 
 int parse_userinfo() {
     cJSON *json = cJSON_Parse(recv_message);
-    
+    printf("in parse_userinfo\n");
     user_info.message_id = cJSON_GetObjectItemCaseSensitive(json, "message_id") -> valuestring;
     cJSON *data = cJSON_GetObjectItemCaseSensitive(json, "data");
-    
+    printf("after data parsing\n");
     user_info.name= cJSON_GetObjectItemCaseSensitive(data, "name") -> valuestring;
     user_info.image = cJSON_GetObjectItemCaseSensitive(data, "image") -> valuestring;
     user_info.length = cJSON_GetObjectItemCaseSensitive(data, "length") -> valueint;
-    
+    printf("after image parsing\n");
     if (user_info.name != NULL) {
         char *decode_text = (char *)malloc(user_info.length);
         printf("user's name is %s\n", user_info.name);
         
         // encoding base64 and save_image
         base64_decode(user_info.image, decode_text, user_info.length); 
+        printf("after decode\n");
         if(save_img(USER_FILENAME, decode_text, user_info.length) == -1) {
             fprintf(stderr, "save_image error\n");
             return -1;
@@ -97,8 +85,8 @@ int parse_userinfo() {
         return -1; // fail!
     }
 
-    
-    user_info.result = cJSON_GetObjectItemCaseSensitive(data, "result") -> valuestring;
+    user_info.result = cJSON_GetObjectItemCaseSensitive(json, "result") -> valuestring;
+    printf("finish parse userinfo\n");
     return 0;
 }
 

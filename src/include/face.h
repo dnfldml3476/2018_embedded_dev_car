@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <Python.h>
+#include <camera.h>
 
 /* declare python objects */
 PyObject *PyModule;

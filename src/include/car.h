@@ -5,6 +5,7 @@
 #include <pigpio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <camera.h>
 #include <pthread.h>
 
 #define GPIN23 23

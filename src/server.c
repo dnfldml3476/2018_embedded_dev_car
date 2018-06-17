@@ -1,5 +1,5 @@
 #include <server.h>
-
+#define buffer_size 10000
 bdaddr_t bdaddr_any = {0, 0, 0, 0, 0, 0};
 bdaddr_t bdaddr_local = {0, 0, 0, 0xff, 0xff, 0xff};
 
@@ -149,10 +149,11 @@ sdp_session_t *register_service(uint8_t rfcomm_channel) {
 }
 
 
+
 int init_server() {
     int port = 3, result, sock, client, bytes_read, bytes_sent;
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
-    char buffer[1024] = { 0 };
+    char buffer[buffer_size] = { 0 };
     socklen_t opt = sizeof(rem_addr);
 
     // local bluetooth adapter
@@ -188,12 +189,15 @@ int init_server() {
     return client;
 }
 
+
 char *read_server(int client) {
     // read data from the client
     int bytes_read;
+    printf("in read_server input size : %u\n", sizeof(input));
     bytes_read = read(client, input, sizeof(input));
     if (bytes_read > 0) {
-        printf("received [%s]\n", input);
+      //  printf("bytes_read %d\n", bytes_read);
+      //  printf("received [%s]\n", input);
         return input;
     } else {
         return NULL;

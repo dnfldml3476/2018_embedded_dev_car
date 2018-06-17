@@ -3,7 +3,6 @@
 //int count;
 uint32_t shot_tick;
 
-
 void camera_init() {
 	/*
 	   init camera module and pin
@@ -21,12 +20,15 @@ void camera_init() {
 	gpioSetISRFunc(SWITCH_PINNO,RISING_EDGE,0,camera_rising_func);
 }
 
+
 void camera_rising_func(int gpio,int level,uint32_t tick)
 {
+    printf("picture!! %d \n", PICTURE_ON);
     /*
     need disable();
     */
     FLAG_SENSOR = 0;
+    FLAG_CAR = 0;
     
     stop_car(); // stop the car!
 
@@ -56,5 +58,6 @@ void camera_rising_func(int gpio,int level,uint32_t tick)
 	//picture identificatoning code
 	printf("identificationing......\n");
     PICTURE_ON = 1; // take a picture
+    return;
 }
 

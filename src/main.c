@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 #include <sys/wait.h>
 #include <pigpio.h>
 #include <car.h>
 #include <camera.h>
 #include <server.h>
+#include <face.h>
 #include <data.h>
 #include <signal.h>
 
@@ -16,9 +18,9 @@
 //****************
 
 //#define CAR_TEST
-#define SERVER_TEST
-//#define CONNECT_CAR
-//#define CONNECT_CAMERA
+//#define SERVER_TEST
+#define CONNECT_CAR
+#define CONNECT_CAMERA
 
 /*  *   *  *  *  *  */
 
@@ -31,49 +33,81 @@ void init() {
          exit(-1);
     }
     car_init();
+    stop_car();
     sensor_init();
     camera_init();
-   // face_init();
-    client = init_server();
+    face_init();
+    printf("init complete\n");
 }
 
-
+char message[200000];
 int main() {
 /***    init(); ***/
-
+    init();
+ //   client = init_server();
     client = init_server();
-
+    bool check = false;
 #ifndef CAR_TEST
     while(1) { // 5. repeat  waiting  alarm signal
     // 1. get alarm signal or register signal by bluetooth
         memset(input, 0, sizeof(input));
+        printf("waiting server\n");
         recv_message = read_server(client);
         printf("** recv_message **\n");
-        printf("%s\n\n", recv_message);
-
+        printf("message size: %u\n", strlen(recv_message));
+        printf("accumulate message %u\n", strlen(message));
+        
     // 2. check message 
-        int id = identify_msg();
+        int id = 0;
+        if(check == false) { // check both side
+            id = identify_msg(recv_message);
+            if (id == -1)
+                check  = true;
+        }
+        printf("after first identify %d\n", id);;
+        if (check == true) 
+        {
+            strcat(message, input);
+            
+           printf("%s\n\n", message);
+
+            if ((id = identify_msg(message)) == -1) 
+                continue;
+            else {
+                memcpy(input, message, sizeof(message));
+                memset(message, 0, sizeof(message));
+                printf("\n%s\n\n", input);
+                printf("now call parse_msg\n");
+                check = false;
+            }
+        }
+ //       int id = 0;
         int ret = 0; // auth is OK
 
 #ifdef SERVER_TEST
         ret = 1;
 #endif
-        parse_msg(id);  // if id == 1 then, start move_car
-
+        parse_msg(id);
+        printf("after parse_msg\n");    
+    
     // 3. call move car and take picture
         if (id == 1) {     // if ret = 1 then success and break loop
             while(!ret) 
             { 
-#ifdef CONNECT_CAR
+                printf("call move_car\n");
                 move_car();
-#endif
 #ifdef CONNECT_CAMERA
-                while(!PICTURE_ON); // wait taking picture
-                
+                printf("waiting camera\n");
+                while(!PICTURE_ON) ;
+                     // wait taking picture
+                printf("before face_compare\n");
                 ret = face_compare(FACE_VAL);
+                printf("face_compare complete\n");
+                
 #endif
                 PICTURE_ON = 0; // picture not same
                 FLAG_SENSOR = 1; // sensor on!
+                //sleep(1);
             }
         }
 
@@ -89,9 +123,6 @@ int main() {
         }
         ret = 0;
     }
-#endif
-#ifdef CAR_TEST
-    move_car();
 #endif
     gpioTerminate();
 
