@@ -10,7 +10,7 @@ void face_init() {
     PyCompare_faces = PyObject_GetAttrString(PyModule, "compare_faces");
     printf("face_init complete\n");
         
- //   load_image(USER_FILENAME, 0);
+    load_image(USER_FILENAME, 0);
  //   load_image(PIC_FILENAME, 1);
     if (PyUser != NULL)
         face_encoding(PyUser, 0);
